@@ -1,6 +1,7 @@
 const express     = require('express')
     , bodyParser  = require('body-parser')
     , morgan      = require('morgan')
+    , appRouter   = require('../app/routes/router');
 
 module.exports = () => {
   require('dotenv-safe').load({
@@ -46,6 +47,8 @@ module.exports = () => {
     const uptime = `${new Date() - startTime}ms`;
     res.status(404).json({ startTime, uptime });
   });
+
+  app.use('/v1', appRouter);
 
   return app;
 };
