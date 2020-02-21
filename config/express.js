@@ -43,12 +43,12 @@ module.exports = () => {
     res.status(200).json({ startTime, uptime });
   });
 
+  app.use('/v1', appRouter);
+
   app.use( '/*', ( req, res ) => {
     const uptime = `${new Date() - startTime}ms`;
     res.status(404).json({ startTime, uptime });
   });
-
-  app.use('/v1', appRouter);
 
   return app;
 };
