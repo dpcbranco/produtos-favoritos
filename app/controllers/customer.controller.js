@@ -47,10 +47,35 @@ const _deleteCustomer = async (req, res) => {
 
       return res.send({message: "Customer successfully deleted"}).status(200);
    })
+};
+
+const _patchCustomer = async (req, res) => {
+   
+   const customer = Customer.findOne({email: req.body.email});
+
+   if (!customer){
+      return res.send({message: "Customer not found"}).status(404);
+   }
+
+   if (req.body.name){
+      customer.name = req.body.name;
+      
+      customer.save((err, customerDB) => {
+         if (err){
+            return res.send({error: err.message, message: "Error updating customer"}).status(500);
+         }
+
+         return res.send({email: customerDB.email, name: customerDB.name}).status(200);
+      });
+   }
+
+   return res.send({message: "No changes made"}).status(204);
+
 }
 
 module.exports = {
    getCustomer: _getCustomer,
    postCustomer: _postCustomer,
-   deleteCustomer: _deleteCustomer
+   deleteCustomer: _deleteCustomer,
+   patchCustomer: _patchCustomer
 }
