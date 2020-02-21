@@ -5,6 +5,7 @@ const validator = require('../services/helpers/validator.handler')
 
 router.get('/customer/:email', customerController.getCustomer)
       .post('/customer/new', validator.emailValidator, customerController.postCustomer)
-      .delete('/customer/delete', customerController.deleteCustomer);
+      .delete('/customer/delete', customerController.deleteCustomer)
+      .patch('/customer/update', customerController.patchCustomer);
 
 module.exports = router;
