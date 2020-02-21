@@ -7,10 +7,10 @@ const _getCustomer = async (req, res) => {
    const customer = await Customer.findOne({email: req.params.email})
 
    if (!customer){
-      return res.send({message: "Customer not found!"}).status(404);
+      return res.status(404).send({message: "Customer not found!"});
    }
 
-   return res.send({email: customer.email, name: customer.name}).status(200);
+   return res.status(200).send({email: customer.email, name: customer.name});
 };
 
 const _postCustomer = async (req, res) => {
@@ -18,17 +18,17 @@ const _postCustomer = async (req, res) => {
    let customer = await Customer.findOne({email: req.body.email});
 
    if (customer){
-      return res.send({message: "E-mail address registration already exists"}).status(400);
+      return res.status(409).send({message: "E-mail address registration already exists"});
    }
 
    customer = new Customer({name: req.body.name, email: req.body.email});
 
    customer.save((err, customerDB) => {
       if (err) {
-         return res.send({error: err.message, message: "Error creating new customer"}).status(500);
+         return res.status(500).send({error: err.message, message: "Error creating new customer"});
       }
 
-      return res.send({message: "Customer created successfully"}).status(200);
+      return res.status(201).send({message: "Customer created successfully"});
    })
    
 };
@@ -37,15 +37,15 @@ const _deleteCustomer = async (req, res) => {
    const customer = await Customer.findOne({email: req.body.email});
 
    if (!customer){
-      return res.send({message: "Customer not found"}).status(404);
+      return res.status(404).send({message: "Customer not found"});
    }
 
    customer.remove((err, customerDB) => {
       if (err){
-         return res.send({error: err.message, message: "Error deleting customer"}).status(500);
+         return res.status(500).send({error: err.message, message: "Error deleting customer"});
       }
 
-      return res.send({message: "Customer successfully deleted"}).status(200);
+      return res.status(200).send({message: "Customer successfully deleted"});
    })
 };
 
@@ -54,7 +54,7 @@ const _patchCustomer = async (req, res) => {
    const customer = Customer.findOne({email: req.body.email});
 
    if (!customer){
-      return res.send({message: "Customer not found"}).status(404);
+      return res.status(404).send({message: "Customer not found"});
    }
 
    if (req.body.name){
@@ -62,14 +62,14 @@ const _patchCustomer = async (req, res) => {
       
       customer.save((err, customerDB) => {
          if (err){
-            return res.send({error: err.message, message: "Error updating customer"}).status(500);
+            return res.status(500).send({error: err.message, message: "Error updating customer"});
          }
 
-         return res.send({email: customerDB.email, name: customerDB.name}).status(200);
+         return res.status(200).send({email: customerDB.email, name: customerDB.name});
       });
    }
 
-   return res.send({message: "No changes made"}).status(204);
+   return res.status(204).send({message: "No changes made"});
 
 }
 
