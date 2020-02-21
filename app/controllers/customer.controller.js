@@ -4,7 +4,7 @@ const Customer = mongoose.model("Customer", customerSchema)
 
 const _getCustomer = async (req, res) => {
 
-   const customer = await Customer.findOne({email: req.params.email})
+   const customer = await Customer.findOne({email: req.body.email})
 
    if (!customer){
       return res.status(404).send({message: "Customer not found!"});
