@@ -28,8 +28,30 @@ const _addProduct = async (req, res) => {
    });
 };
 
+const _removeProduct = async (req, res) => {
+   const wishlist = await Wishlist.findOne({customer: req.params.customerId});
+
+   if (!wishlist.products.includes(req.body.productId)){
+      return res.status(404).send({message: "Product not found on wishlist"});
+   }
+
+   wishlist.products = wishlist.products.filter(item => {
+      item === req.body.productId;
+   });
+
+   wishlist.save((err, wishlistDB) => {
+      if (err){
+         return res.status(500).send({error: err.message, message: "Error removing favorite product"});
+      }
+
+      return res.status(200).send({message: "Product removed successfully"})
+   });
+
+}
+
 module.exports = {
    newWishlist: _newWishlist,
    deleteWishlist: _deleteWishlist,
-   addProduct: _addProduct
+   addProduct: _addProduct,
+   removeProduct: _removeProduct
 }
