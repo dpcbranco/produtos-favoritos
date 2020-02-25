@@ -9,6 +9,9 @@ const _newWishlist = (customer, callback) => {
    wishlist.save((err, wishlistDB) => callback(err, wishlistDB));
 }
 
+const _deleteWishlist = (customerId, callback) => {
+   Wishlist.findOneAndRemove({customer: customerId}, (err, wishlistDB) => callback(err, wishlistDB));
+}
 
 module.exports = {
    newWishlist: _newWishlist,

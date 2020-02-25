@@ -48,12 +48,17 @@ const _deleteCustomer = async (req, res) => {
       return res.status(404).send({message: "Customer not found"});
    }
 
-   customer.remove((err, customerDB) => {
-      if (err){
-         return res.status(500).send({error: err.message, message: "Error deleting customer"});
-      }
-
-      return res.status(200).send({message: "Customer successfully deleted"});
+   wishlistController.deleteWishlist(customer._id, (errWishlist, wishlistDB) => {
+      if (errWishlist){
+         return res.status(500).send({error: errWishlist.message, message: "Error deleting customer wishlist"})
+      } 
+      customer.remove((err, customerDB) => {
+         if (err){
+            return res.status(500).send({error: err.message, message: "Error deleting customer"});
+         }
+   
+         return res.status(200).send({message: "Customer successfully deleted"});
+      })
    })
 };
 
