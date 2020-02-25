@@ -29,10 +29,10 @@ const _postCustomer = async (req, res) => {
          return res.status(500).send({error: err.message, message: "Error creating new customer"});
       }
 
-      wishlistController.newWishlist(customerDB, (wishlist) => {
-         if (wishlist.errors){
+      wishlistController.newWishlist(customerDB, (errWishlist, wishlistDB) => {
+         if (errWishlist){
             customerDB.remove();
-            return res.status(500).send({error: wishlist.message, message: "Error creating customer's wishlist"})
+            return res.status(500).send({error: errWishlist.message, message: "Error creating customer's wishlist"})
          }
    
          return res.status(201).send({message: "Customer created successfully"});

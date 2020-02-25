@@ -6,17 +6,11 @@ const _newWishlist = (customer, callback) => {
 
    const wishlist = new Wishlist({customer: customer});
 
-   wishlist.save((err, wishlistDB) => {
-      if (err){
-         console.log(err)
-         callback(err);
-      }
-
-      console.log(wishlistDB)
-      callback(wishlistDB);
-   });
+   wishlist.save((err, wishlistDB) => callback(err, wishlistDB));
 }
 
+
 module.exports = {
-   newWishlist: _newWishlist
+   newWishlist: _newWishlist,
+   deleteWishlist: _deleteWishlist
 }
