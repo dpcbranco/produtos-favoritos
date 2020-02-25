@@ -1,17 +1,18 @@
 const mongoose = require('mongoose');
-const wishlistSchema = require('../models/Wishlist')
+const wishlistSchema = require('../models/Wishlist');
 const Wishlist = mongoose.model("WishList", wishlistSchema);
+const productRequest = require('../services/connections/products.connector').productRequest;
 
 const _newWishlist = (customer, callback) => {
 
    const wishlist = new Wishlist({customer: customer});
 
    wishlist.save((err, wishlistDB) => callback(err, wishlistDB));
-}
+};
 
 const _deleteWishlist = (customerId, callback) => {
    Wishlist.findOneAndRemove({customer: customerId}, (err, wishlistDB) => callback(err, wishlistDB));
-}
+};
 
 const _addProduct = async (req, res) => {
    const wishlist = res.locals.wishlist;
@@ -46,11 +47,45 @@ const _removeProduct = async (req, res) => {
       return res.status(200).send({message: "Product removed successfully"})
    });
 
-}
+};
+
+const _getWishlist = async (req, res) => {
+   const wishlist = await Wishlist.findOne({customer: req.params.customerId});
+
+   if (!wishlist){
+      return res.status(404).send({message: "Wishlist not found"});
+   }
+
+   const initialProduct = (req.query.pageNumber - 1) * req.query.perPage;
+   const lastProduct = initialProduct + req.query.perPage;
+   const products = wishlist.products;
+
+   const wishlistResponse = [];
+
+   // Visto que o preço do produto pode ser alterado, seus dados não são armazenados na wishlist
+   // e são obtidos diretamente da API
+   for (let i = initialProduct; (i < lastProduct && i < products.length); i++){
+      try {
+         const product = await productRequest(products[i]);
+         if (product){ wishlistResponse.push(product) }
+      } catch (err){
+         console.error(err);
+      }
+   }
+   
+   if (wishlistResponse.length === 0){
+      return res.status(404).send({message: "Products not found in this page"});
+   }
+
+   return res.status(200).send(wishlistResponse);
+
+};
 
 module.exports = {
    newWishlist: _newWishlist,
    deleteWishlist: _deleteWishlist,
    addProduct: _addProduct,
-   removeProduct: _removeProduct
+   removeProduct: _removeProduct,
+   removeProduct: _removeProduct,
+   getWishlist: _getWishlist
 }
