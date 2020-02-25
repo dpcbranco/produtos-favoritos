@@ -14,14 +14,13 @@ const _validateProduct = async (req, res, next) => {
       return res.status(404).send({message: "Wishlist not found"});
    }
 
-   if (wishlist.products.includes(req.body.productId)){
+   if (wishlist.products.includes(req.params.productId)){
       return res.status(409).send({message: "Product already added to wishlist"});
    }
 
    try{
-      const product = await productRequest(req.body.productId);   
+      const product = await productRequest(req.params.productId);   
       if (product) {
-         res.locals.product = product;
          res.locals.wishlist = wishlist;
       }
    } catch (err) {

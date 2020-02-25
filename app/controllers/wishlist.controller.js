@@ -15,9 +15,8 @@ const _deleteWishlist = (customerId, callback) => {
 
 const _addProduct = async (req, res) => {
    const wishlist = res.locals.wishlist;
-   const product = res.locals.product;
 
-   wishlist.products.push(product.id);
+   wishlist.products.push(req.params.productId);
 
    wishlist.save((err, wishlistDB) => {
       if (err){
@@ -31,12 +30,12 @@ const _addProduct = async (req, res) => {
 const _removeProduct = async (req, res) => {
    const wishlist = await Wishlist.findOne({customer: req.params.customerId});
 
-   if (!wishlist.products.includes(req.body.productId)){
+   if (!wishlist.products.includes(req.params.productId)){
       return res.status(404).send({message: "Product not found on wishlist"});
    }
 
    wishlist.products = wishlist.products.filter(item => {
-      item === req.body.productId;
+      item === req.params.productId;
    });
 
    wishlist.save((err, wishlistDB) => {
