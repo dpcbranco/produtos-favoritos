@@ -20,7 +20,10 @@ const _validateProduct = async (req, res, next) => {
 
    try{
       const product = await productRequest(req.body.productId);   
-      if (product) { res.locals.product = product }
+      if (product) {
+         res.locals.product = product;
+         res.locals.wishlist = wishlist;
+      }
    } catch (err) {
       return res.status(err.status).send(err);
    }
