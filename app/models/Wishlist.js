@@ -14,6 +14,6 @@ const wishlist = {
    }]
 }
 
-const wishlistSchema = Schema(wishlist);
+const wishlistSchema = Schema(wishlist, { versionKey: false });
 
 module.exports = wishlistSchema;

@@ -14,6 +14,6 @@ const customer = {
 
 }
 
-const customerSchema = mongoose.Schema(customer);
+const customerSchema = mongoose.Schema(customer, { versionKey: false });
 
 module.exports = customerSchema;
