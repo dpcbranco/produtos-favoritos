@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const customerSchema = require('../models/Customer');
 const Customer = mongoose.model("Customer", customerSchema)
+const wishlistController = require('./wishlist.controller')
 
 const _getCustomer = async (req, res) => {
 
@@ -28,7 +29,14 @@ const _postCustomer = async (req, res) => {
          return res.status(500).send({error: err.message, message: "Error creating new customer"});
       }
 
-      return res.status(201).send({message: "Customer created successfully"});
+      wishlistController.newWishlist(customerDB, (wishlist) => {
+         if (wishlist.errors){
+            customerDB.remove();
+            return res.status(500).send({error: wishlist.message, message: "Error creating customer's wishlist"})
+         }
+   
+         return res.status(201).send({message: "Customer created successfully"});
+      });
    })
    
 };
