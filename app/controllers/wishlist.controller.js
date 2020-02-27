@@ -26,7 +26,7 @@ const _removeProduct = async (req, res) => {
    }
 
    wishlist.products = wishlist.products.filter(item => {
-      item === req.params.productId;
+      return item !== req.params.productId;
    });
 
    wishlist.save((err, wishlistDB) => {
