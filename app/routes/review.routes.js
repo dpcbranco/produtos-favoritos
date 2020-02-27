@@ -1,8 +1,8 @@
 const router = require('express').Router();
 const reviewController = require('../controllers/review.controller');
-const productValidator = require('../services/helpers/productvalidator.handler');
+const productHandler = require('../services/helpers/product.handler');
 
 router.get('/product/reviews/:productId', reviewController.getProductReviews)
-      .post('/product/reviews/new/:productId', productValidator.validateProduct, reviewController.postReview);
+      .post('/product/reviews/new/:productId', productHandler.validateProduct, reviewController.postReview);
 
 module.exports = router;

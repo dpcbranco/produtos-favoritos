@@ -1,10 +1,10 @@
 const router = require('express').Router();
 const customerController = require('../controllers/customer.controller');
-const customervalidator = require('../services/helpers/customervalidator.handler')
+const customerHandler = require('../services/helpers/customer.handler')
 
 
 router.get('/customer', customerController.getCustomer)
-      .post('/customer/new', customervalidator.emailValidator, customerController.postCustomer)
+      .post('/customer/new', customerHandler.emailValidator, customerController.postCustomer)
       .delete('/customer/delete', customerController.deleteCustomer)
       .patch('/customer/update', customerController.patchCustomer);
 
