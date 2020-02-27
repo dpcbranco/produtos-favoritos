@@ -63,26 +63,25 @@ const _deleteCustomer = async (req, res) => {
 };
 
 const _patchCustomer = async (req, res) => {
-   
-   const customer = Customer.findOne({email: req.body.email});
 
-   if (!customer){
-      return res.status(404).send({message: "Customer not found"});
+   if (!req.body.name){
+      return res.status(204).send({message: "No changes made"});
    }
 
-   if (req.body.name){
-      customer.name = req.body.name;
-      
-      customer.save((err, customerDB) => {
+   await Customer.findOneAndUpdate({email: req.body.email}, {name: req.body.name}, 
+      (err, customerDB) => {
          if (err){
             return res.status(500).send({error: err.message, message: "Error updating customer"});
          }
 
-         return res.status(200).send({email: customerDB.email, name: customerDB.name});
-      });
-   }
-
-   return res.status(204).send({message: "No changes made"});
+         if (!customerDB){
+            return res.status(404).send({message: "Customer not found"});
+         }
+         return res.status(200).send({message: "Customer updated"});
+      }
+   );
+      
+   
 
 }
 
