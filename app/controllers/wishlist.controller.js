@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const wishlistSchema = require('../models/Wishlist');
 const Wishlist = mongoose.model("WishList", wishlistSchema);
 const productRequest = require('../services/connections/products.connector').productRequest;
+const productHandler = require('../services/helpers/product.handler');
 
 const _addProduct = async (req, res) => {
    const wishlist = res.locals.wishlist;
@@ -56,7 +57,10 @@ const _getWishlist = async (req, res) => {
    for (let i = initialProduct; (i < lastProduct && i < products.length); i++){
       try {
          const product = await productRequest(products[i]);
-         if (product){ wishlistResponse.push(product) }
+         if (product){
+            product.rating = await productHandler.productAvgRating(products[i]);
+            wishlistResponse.push(product) 
+         }
       } catch (err){
          console.error(err);
       }
