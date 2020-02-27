@@ -3,17 +3,6 @@ const wishlistSchema = require('../models/Wishlist');
 const Wishlist = mongoose.model("WishList", wishlistSchema);
 const productRequest = require('../services/connections/products.connector').productRequest;
 
-const _newWishlist = (customer, callback) => {
-
-   const wishlist = new Wishlist({customer: customer});
-
-   wishlist.save((err, wishlistDB) => callback(err, wishlistDB));
-};
-
-const _deleteWishlist = (customerId, callback) => {
-   Wishlist.findOneAndRemove({customer: customerId}, (err, wishlistDB) => callback(err, wishlistDB));
-};
-
 const _addProduct = async (req, res) => {
    const wishlist = res.locals.wishlist;
 
@@ -82,10 +71,7 @@ const _getWishlist = async (req, res) => {
 };
 
 module.exports = {
-   newWishlist: _newWishlist,
-   deleteWishlist: _deleteWishlist,
    addProduct: _addProduct,
-   removeProduct: _removeProduct,
    removeProduct: _removeProduct,
    getWishlist: _getWishlist
 }

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const customerSchema = require('../models/Customer');
 const Customer = mongoose.model("Customer", customerSchema)
-const wishlistController = require('./wishlist.controller')
+const wishlistHandler = require('../services/helpers/wishlist.handler');
 
 const _getCustomer = async (req, res) => {
 
@@ -29,7 +29,7 @@ const _postCustomer = async (req, res) => {
          return res.status(500).send({error: err.message, message: "Error creating new customer"});
       }
 
-      wishlistController.newWishlist(customerDB, (errWishlist, wishlistDB) => {
+      wishlistHandler.newWishlist(customerDB, (errWishlist, wishlistDB) => {
          if (errWishlist){
             customerDB.remove();
             return res.status(500).send({error: errWishlist.message, message: "Error creating customer's wishlist"})
@@ -48,7 +48,7 @@ const _deleteCustomer = async (req, res) => {
       return res.status(404).send({message: "Customer not found"});
    }
 
-   wishlistController.deleteWishlist(customer._id, (errWishlist, wishlistDB) => {
+   wishlistHandler.deleteWishlist(customer._id, (errWishlist, wishlistDB) => {
       if (errWishlist){
          return res.status(500).send({error: errWishlist.message, message: "Error deleting customer wishlist"})
       } 
