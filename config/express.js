@@ -1,7 +1,8 @@
 const express     = require('express')
     , bodyParser  = require('body-parser')
     , morgan      = require('morgan')
-    , appRouter   = require('../app/routes/router');
+    , appRouter   = require('../app/routes/router')
+    , jwt         = require('jsonwebtoken');
 
 module.exports = () => {
   require('dotenv-safe').load({
@@ -41,6 +42,20 @@ module.exports = () => {
   app.use( '/health/*', ( req, res ) => {
     const uptime = `${new Date() - startTime}ms`;
     res.status(200).json({ startTime, uptime });
+  });
+  
+  //Valida se usuário está autenticado prosseguir com chamada da API
+  app.use( ( req, res, next ) => {
+    if ( ( req.url === '/v1/auth' || req.url === '/v1/register' ) && req.method === 'POST' ) {console.log("batata"); return next();} // it does not blocks authentication request
+    if ( req.headers && req.headers.authorization ){
+      jwt.verify( req.headers.authorization, process.env.JWT_SECRET, ( err, decode ) => {
+        if ( err ) req.user = undefined;
+        req.user = decode;
+        next();
+      });
+    } else {
+      return res.status( 401 ).json( {message: 'Unauthorized'} );
+    }
   });
 
   app.use('/v1', appRouter);
