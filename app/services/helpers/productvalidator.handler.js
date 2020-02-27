@@ -5,7 +5,17 @@ const productRequest = require('../connections/products.connector').productReque
 
 
 const _validateProduct = async (req, res, next) => {
-   
+
+   try{
+      const product = await productRequest(req.params.productId);   
+   } catch (err) {
+      return res.status(err.status).send(err);
+   }
+
+   next();
+};
+
+const _validateWishListAddition = async (req, res, next) => { 
    const ObjectId = mongoose.Types.ObjectId;
    const wishlist = await Wishlist.findOne({customer: new ObjectId(req.params.customerId)});
    
@@ -18,18 +28,12 @@ const _validateProduct = async (req, res, next) => {
       return res.status(409).send({message: "Product already added to wishlist"});
    }
 
-   try{
-      const product = await productRequest(req.params.productId);   
-      if (product) {
-         res.locals.wishlist = wishlist;
-      }
-   } catch (err) {
-      return res.status(err.status).send(err);
-   }
+   res.locals.wishlist = wishlist;
 
    next();
-};
+}
 
 module.exports = {
-   validateProduct: _validateProduct
+   validateProduct: _validateProduct,
+   validateWishListAddition: _validateWishListAddition
 }
