@@ -3,8 +3,7 @@ const reviewSchema = require('../models/Review');
 const Review = mongoose.model('Review', reviewSchema);
 
 const _getProductReviews = async (req, res) => {
-   const ObjectId = mongoose.Types.ObjectId;
-   const reviews = await Review.find({product: new ObjectId(req.params.productId)})
+   const reviews = await Review.find({product: req.params.productId})
                               .limit(req.query.perPage)
                               .skip(req.query.perPage * req.query.page);
 
