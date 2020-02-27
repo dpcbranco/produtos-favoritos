@@ -14,6 +14,10 @@ const review = {
       min: 0,
       max: 10,
       required: true
+   },
+   customerName: {
+      type: String,
+      required: true
    }
 }
 
