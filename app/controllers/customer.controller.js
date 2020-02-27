@@ -11,7 +11,7 @@ const _getCustomer = async (req, res) => {
       return res.status(404).send({message: "Customer not found!"});
    }
 
-   return res.status(200).send({email: customer.email, name: customer.name});
+   return res.status(200).send(customer);
 };
 
 const _postCustomer = async (req, res) => {
